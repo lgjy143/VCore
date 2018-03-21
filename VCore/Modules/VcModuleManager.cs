@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
-using VCore.Extensions;
+using VCore.Dependency;
 
 namespace VCore.Modules
 {
@@ -18,7 +18,13 @@ namespace VCore.Modules
 
         private VcModuleCollection _modules;
 
-        //private readonly IIocManager _iocManager;
+        private readonly IIocManager _iocManager;
+        public VcModuleManager(IIocManager iocManager)
+        {
+            _iocManager = iocManager;
+            Logger = NullLogger.Instance;
+        }
+
         //private readonly IAbpPlugInManager _vcPlugInManager;
 
         //public VcModuleManager(IIocManager iocManager, IVcPlugInManager vcPlugInManager)
@@ -46,7 +52,7 @@ namespace VCore.Modules
         public virtual void ShutdownModules()
         {
             Logger.LogDebug("Shutting down has been started");
-            
+
             var sortedModules = _modules.GetSortedModuleListByDependency();
             sortedModules.Reverse();
             sortedModules.ForEach(sm => sm.Instance.Shutdown());
@@ -95,7 +101,7 @@ namespace VCore.Modules
         {
             foreach (var moduleType in moduleTypes)
             {
-                var moduleObject = _iocManager.Resolve(moduleType) as VcModule;
+                var moduleObject = IIocManager.Resolve(moduleType) as VcModule;
                 if (moduleObject == null)
                 {
                     throw new VcInitializationException("This type is not an VC module: " + moduleType.AssemblyQualifiedName);

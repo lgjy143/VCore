@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,10 +26,10 @@ namespace VCore.Modules
         /// </summary>
         public ILogger Logger { get; set; }
 
-        //protected AbpModule()
-        //{
-        //    Logger = NullLogger.Instance;
-        //}
+        protected VcModule()
+        {
+            Logger = NullLogger.Instance;
+        }
 
         /// <summary>
         /// This is the first event called on application startup. 
