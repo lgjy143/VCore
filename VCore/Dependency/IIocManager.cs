@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VCore.Dependency
 {
-    public interface IIocManager : IIocResolver
+    public interface IIocManager : IIocResolver, IIocRegistrar
     {
         /// <summary>
         /// Reference to the Container.

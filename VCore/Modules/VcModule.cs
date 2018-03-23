@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using VCore.Dependency;
 using VCore.Extensions;
 
 namespace VCore.Modules
@@ -14,7 +15,7 @@ namespace VCore.Modules
         /// <summary>
         /// Gets a reference to the IOC manager.
         /// </summary>
-        //protected internal IIocManager IocManager { get; internal set; }
+        protected internal IIocManager IocManager { get; internal set; }
 
         /// <summary>
         /// Gets a reference to the ABP configuration.

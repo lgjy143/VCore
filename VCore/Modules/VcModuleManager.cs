@@ -101,7 +101,7 @@ namespace VCore.Modules
         {
             foreach (var moduleType in moduleTypes)
             {
-                var moduleObject = IIocManager.Resolve(moduleType) as VcModule;
+                var moduleObject = _iocManager.Resolve(moduleType) as VcModule;
                 if (moduleObject == null)
                 {
                     throw new VcInitializationException("This type is not an VC module: " + moduleType.AssemblyQualifiedName);

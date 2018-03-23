@@ -16,15 +16,20 @@ namespace VCore.Dependency
             Instance = new IocManager();
         }
 
-        //public bool IsRegistered(Type type)
-        //{
-        //    return IocContainer.Contains(type);
-        //}
+        public void Register(Type type)
+        {
+            IocContainer.AddSingleton(type);
+        }
 
-        //public bool IsRegistered<T>()
-        //{
-        //    return IocContainer.Kernel.HasComponent(typeof(TType));
-        //}
+        public bool IsRegistered(Type type)
+        {
+            return IocContainer.BuildServiceProvider().GetService(type) != null;
+        }
+
+        public bool IsRegistered<TType>()
+        {
+            return IocContainer.BuildServiceProvider().GetService<TType>() != null;
+        }
 
         public object Resolve(Type type)
         {
