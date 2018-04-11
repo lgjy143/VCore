@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using VCore.Dependency.IocContainer;
 
 namespace VCore.Dependency
 {
@@ -10,7 +11,7 @@ namespace VCore.Dependency
         /// <summary>
         /// Reference to the Container.
         /// </summary>
-        IServiceCollection IocContainer { get; }
+        IIocContainer IocContainer { get; }
 
         ///// <summary>
         ///// Checks whether given type is registered before.

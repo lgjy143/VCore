@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.Extensions.DependencyInjection;
+using VCore.Dependency.IocContainer;
 
 namespace VCore.Dependency
 {
@@ -9,7 +9,7 @@ namespace VCore.Dependency
     {
         public static IocManager Instance { get; private set; }
 
-        public IServiceCollection IocContainer { get; private set; }
+        public IIocContainer IocContainer { get; private set; }
 
         static IocManager()
         {
@@ -18,22 +18,22 @@ namespace VCore.Dependency
 
         public void Register(Type type)
         {
-            IocContainer.AddSingleton(type);
+            IocContainer.Register(type);
         }
 
         public bool IsRegistered(Type type)
         {
-            return IocContainer.BuildServiceProvider().GetService(type) != null;
+            return IocContainer.IsRegistered(type);
         }
 
         public bool IsRegistered<TType>()
         {
-            return IocContainer.BuildServiceProvider().GetService<TType>() != null;
+            return IocContainer.IsRegistered<TType>();
         }
 
         public object Resolve(Type type)
         {
-            return IocContainer.BuildServiceProvider().GetService(type);
+            return IocContainer.Resolve(type);
         }
     }
 }
