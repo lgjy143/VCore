@@ -6,9 +6,6 @@ namespace VCore.Dependency.IocContainer
 {
     public interface IIocContainer
     {
-
-
-
         void Register(Type type);
         /// <summary>
         /// Checks whether given type is registered before.
