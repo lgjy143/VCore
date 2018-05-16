@@ -20,7 +20,7 @@ namespace VCore.Test
 
             var autofacContainer = new AutofacContainer(builder);
 
-            VCore.Dependency.IocContainer.IocContainer.SetContainer(autofacContainer);
+            //VCore.Dependency.IocContainer.IocContainer.SetContainer(autofacContainer);
 
             autofacContainer.Build();
 
@@ -30,13 +30,13 @@ namespace VCore.Test
         [Fact]
         public void Register()
         {
-            var resolveObj = VCore.Dependency.IocContainer.IocContainer.Instance.Resolve(typeof(IocManagerTest1));
+            var resolveObj = VCore.Dependency.IocContainer.IocContainer.Kernel.Resolve(typeof(IocManagerTest1));
 
-            VCore.Dependency.IocContainer.IocContainer.Instance.Register(typeof(IocManagerTest));
+            VCore.Dependency.IocContainer.IocContainer.Kernel.Register(typeof(IocManagerTest));
 
-            var isRegistered = VCore.Dependency.IocContainer.IocContainer.Instance.IsRegistered(typeof(IocManagerTest));
+            var isRegistered = VCore.Dependency.IocContainer.IocContainer.Kernel.IsRegistered(typeof(IocManagerTest));
 
-            var resolveObj0 = VCore.Dependency.IocContainer.IocContainer.Instance.Resolve(typeof(IocManagerTest));
+            var resolveObj0 = VCore.Dependency.IocContainer.IocContainer.Kernel.Resolve(typeof(IocManagerTest));
 
             //VCore.Dependency.IocManager.Instance.Register(this.GetType());
 

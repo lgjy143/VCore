@@ -6,7 +6,7 @@ using VCore.Dependency.IocContainer;
 
 namespace VCore.Dependency.Autofac
 {
-    public class AutofacContainer : IIocContainer
+    public class AutofacContainer 
     {
         private readonly ContainerBuilder _containerBuilder;
         private IContainer _container;

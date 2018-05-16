@@ -1,41 +1,40 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Autofac;
+using System;
 
 namespace VCore.Dependency.IocContainer
 {
     public class IocContainer : IIocContainer
     {
-        /// <summary>Represents the current object container.
-        /// </summary>
-        public static IIocContainer Instance { get; private set; }
+        public IContainer Kernel { get; }
+        public ContainerBuilder Builder => new ContainerBuilder();
 
-        /// <summary>Set the object container.
-        /// </summary>
-        /// <param name="container"></param>
-        public static void SetContainer(IIocContainer container)
+        public IocContainer()
         {
-            Instance = container;
+            Kernel = Builder.Build();
+        }
+
+        public void Dispose()
+        {
+            Kernel.Dispose();
         }
 
         public bool IsRegistered(Type type)
         {
-            return Instance.IsRegistered(type);
+            return Kernel.IsRegistered(type);
         }
-
         public bool IsRegistered<TType>()
         {
-            return Instance.IsRegistered<TType>();
-        }
-
-        public void Register(Type type)
-        {
-            Instance.Register(type);
+            return Kernel.IsRegistered<TType>();
         }
 
         public object Resolve(Type type)
         {
-            return Instance.Resolve(type);
+            return Kernel.Resolve(type);
+        }
+
+        public void Register(Type type)
+        {
+            Builder.RegisterType(type);
         }
     }
 }

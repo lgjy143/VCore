@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using Autofac;
 
 namespace VCore.Dependency.IocContainer
 {
-    public interface IIocContainer
+    public interface IIocContainer : IDisposable
     {
+        IContainer Kernel { get; }
+
         void Register(Type type);
         /// <summary>
         /// Checks whether given type is registered before.
