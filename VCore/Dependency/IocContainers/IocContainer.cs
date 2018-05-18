@@ -42,7 +42,6 @@ namespace VCore.Dependency.IocContainers
         {
             return Kernel.Resolve(type);
         }
-
         public TService Resolve<TService>()
         {
             return Kernel.Resolve<TService>();

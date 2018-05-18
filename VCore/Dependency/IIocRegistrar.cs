@@ -17,6 +17,10 @@ namespace VCore.Dependency
         /// </summary>
         /// <typeparam name="TType">Type to check</typeparam>
         bool IsRegistered<TType>();
+        void Register<TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+           where TImpl : class;
+
+        void Register(Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton);
         /// <summary>
         /// Registers a type with it's implementation.
         /// </summary>

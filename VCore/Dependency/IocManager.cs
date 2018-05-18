@@ -44,7 +44,43 @@ namespace VCore.Dependency
         {
             IocContainer.Register(type);
         }
+        public void Register<TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton) where TImpl : class
+        {
+            IocContainer.Register(builder =>
+            {
+                if (typeof(TImpl).GetTypeInfo().IsGenericType)
+                {
+                    builder.RegisterGeneric(typeof(TImpl))
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+                else
+                {
+                    builder.RegisterType<TImpl>()
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+            });
+        }
 
+        public void Register(Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        {
+            IocContainer.Register(builder =>
+            {
+                if (impl.GetTypeInfo().IsGenericType)
+                {
+                    builder.RegisterGeneric(impl)
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+                else
+                {
+                    builder.RegisterType(impl)
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+            });
+        }
         public void Register<TType, TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
              where TType : class
              where TImpl : class, TType
@@ -96,7 +132,10 @@ namespace VCore.Dependency
         {
             return IocContainer.Resolve(type);
         }
-
+        public T Resolve<T>(Type type)
+        {
+            return (T)IocContainer.Resolve(type);
+        }
         public T Resolve<T>()
         {
             return IocContainer.Resolve<T>();
