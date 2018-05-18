@@ -1,16 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using VCore.Dependency.IocContainer;
+﻿using System;
+using VCore.Dependency.IocContainers;
 
 namespace VCore.Dependency
 {
-    public interface IIocManager : IIocResolver, IIocRegistrar
+    public interface IIocManager : IIocResolver, IIocRegistrar, IDisposable
     {
         /// <summary>
         /// Reference to the Container.
         /// </summary>
-        IIocContainer IocContainer { get; }
+       IIocContainer IocContainer { get; }
     }
 }

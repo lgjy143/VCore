@@ -1,7 +1,9 @@
 ﻿using Autofac;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace VCore.Dependency.IocContainer
+namespace VCore.Dependency.IocContainers
 {
     public class IocContainer : IIocContainer
     {
@@ -17,7 +19,6 @@ namespace VCore.Dependency.IocContainer
         {
             Kernel.Dispose();
         }
-
         public bool IsRegistered(Type type)
         {
             return Kernel.IsRegistered(type);
@@ -26,15 +27,30 @@ namespace VCore.Dependency.IocContainer
         {
             return Kernel.IsRegistered<TType>();
         }
-
-        public object Resolve(Type type)
+        public void Register(Action<ContainerBuilder> registrationBuilder)
         {
-            return Kernel.Resolve(type);
+            var builder = new ContainerBuilder();
+            registrationBuilder(builder);
+            builder.Update(Kernel);
         }
 
         public void Register(Type type)
         {
             Builder.RegisterType(type);
+        }
+        public object Resolve(Type type)
+        {
+            return Kernel.Resolve(type);
+        }
+
+        public TService Resolve<TService>()
+        {
+            return Kernel.Resolve<TService>();
+        }
+
+        public TService[] ResolveAll<TService>()
+        {
+            return Kernel.Resolve<IEnumerable<TService>>().ToArray();
         }
     }
 }

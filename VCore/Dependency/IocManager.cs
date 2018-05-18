@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
-using VCore.Dependency.IocContainer;
+using Autofac;
+using VCore.Dependency.IocContainers;
 
 namespace VCore.Dependency
 {
@@ -15,10 +17,17 @@ namespace VCore.Dependency
         {
             Instance = new IocManager();
         }
-
-        public void Register(Type type)
+        public IocManager()
         {
-            IocContainer.Register(type);
+            IocContainer = new IocContainer();
+
+            IocContainer.Register(builder =>
+                    builder.RegisterInstance(this)
+                        .AsSelf()
+                        .As<IIocManager>()
+                        .As<IIocRegistrar>()
+                        .As<IIocResolver>()
+            );
         }
 
         public bool IsRegistered(Type type)
@@ -31,9 +40,76 @@ namespace VCore.Dependency
             return IocContainer.IsRegistered<TType>();
         }
 
+        public void Register(Type type)
+        {
+            IocContainer.Register(type);
+        }
+
+        public void Register<TType, TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+             where TType : class
+             where TImpl : class, TType
+        {
+            IocContainer.Register(builder =>
+            {
+                if (typeof(TImpl).GetTypeInfo().IsGenericType)
+                {
+                    builder.RegisterGeneric(typeof(TImpl))
+                        .AsSelf()
+                        .As<TType>()
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+                else
+                {
+                    builder.RegisterType<TImpl>()
+                        .AsSelf()
+                        .As<TType>()
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+            });
+        }
+        public void Register(Type type, Type impl, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
+        {
+            IocContainer.Register(builder =>
+            {
+                if (impl.GetTypeInfo().IsGenericType)
+                {
+                    builder.RegisterGeneric(impl)
+                        .AsSelf()
+                        .As(type)
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+                else
+                {
+                    builder.RegisterType(impl)
+                        .AsSelf()
+                        .As(type)
+                        .PropertiesAutowired()
+                        .ApplyLifestyle(lifeStyle);
+                }
+            });
+        }
+
         public object Resolve(Type type)
         {
             return IocContainer.Resolve(type);
+        }
+
+        public T Resolve<T>()
+        {
+            return IocContainer.Resolve<T>();
+        }
+
+        public T[] ResolveAll<T>()
+        {
+            return IocContainer.ResolveAll<T>();
+        }
+
+        public void Dispose()
+        {
+            IocContainer.Dispose();
         }
     }
 }
