@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 
 namespace VCore.Dependency
 {
     public interface IIocRegistrar
     {
-        void Register(Type type);
+        void AddConventionalRegistrar(IConventionalDependencyRegistrar registrar);
+        void RegisterAssemblyByConvention(Assembly assembly, ConventionalRegistrationConfig config);
         /// <summary>
         /// Checks whether given type is registered before.
         /// </summary>

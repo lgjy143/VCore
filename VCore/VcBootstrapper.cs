@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
 using VCore.Configuration.Startup;
 using VCore.Dependency;
@@ -58,28 +59,75 @@ namespace VCore
             _moduleManager?.ShutdownModules();
         }
 
-        public static VcBootstrapper Create<TStartupModule>()
-           where TStartupModule : VcModule
-        {
-            return new VcBootstrapper(typeof(TStartupModule));
-        }
-
-        public static VcBootstrapper Create<TStartupModule>([NotNull] IIocManager iocManager)
+        /// <summary>
+        /// Creates a new <see cref="AbpBootstrapper"/> instance.
+        /// </summary>
+        /// <typeparam name="TStartupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="VcModule"/>.</typeparam>
+        /// <param name="optionsAction">An action to set options</param>
+        public static VcBootstrapper Create<TStartupModule>([CanBeNull] Action<VcBootstrapperOptions> optionsAction = null)
             where TStartupModule : VcModule
         {
-            return new VcBootstrapper(typeof(TStartupModule), iocManager);
+            return new VcBootstrapper(typeof(TStartupModule), optionsAction);
         }
-
-        public static VcBootstrapper Create([NotNull] Type startupModule)
+        /// <summary>
+        /// Creates a new <see cref="AbpBootstrapper"/> instance.
+        /// </summary>
+        /// <param name="startupModule">Startup module of the application which depends on other used modules. Should be derived from <see cref="VcModule"/>.</param>
+        /// <param name="optionsAction">An action to set options</param>
+        private VcBootstrapper([NotNull] Type startupModule, [CanBeNull] Action<VcBootstrapperOptions> optionsAction = null)
         {
-            return new VcBootstrapper(startupModule);
+            Check.NotNull(startupModule, nameof(startupModule));
+
+            var options = new VcBootstrapperOptions();
+            optionsAction?.Invoke(options);
+
+            if (!typeof(VcModule).GetTypeInfo().IsAssignableFrom(startupModule))
+            {
+                throw new ArgumentException($"{nameof(startupModule)} should be derived from {nameof(VcModule)}.");
+            }
+
+            StartupModule = startupModule;
+
+            IocManager = options.IocManager;
+            PlugInSources = options.PlugInSources;
+
+            _logger = NullLogger.Instance;
+
+            if (!options.DisableAllInterceptors)
+            {
+                AddInterceptorRegistrars();
+            }
         }
 
-        public static VcBootstrapper Create([NotNull] Type startupModule, [NotNull] IIocManager iocManager)
+        //public static VcBootstrapper Create<TStartupModule>()
+        //   where TStartupModule : VcModule
+        //{
+        //    return new VcBootstrapper(typeof(TStartupModule));
+        //}
+
+        //public static VcBootstrapper Create<TStartupModule>([NotNull] IIocManager iocManager)
+        //    where TStartupModule : VcModule
+        //{
+        //    return new VcBootstrapper(typeof(TStartupModule), iocManager);
+        //}
+
+        //public static VcBootstrapper Create([NotNull] Type startupModule)
+        //{
+        //    return new VcBootstrapper(startupModule);
+        //}
+
+        //public static VcBootstrapper Create([NotNull] Type startupModule, [NotNull] IIocManager iocManager)
+        //{
+        //    return new VcBootstrapper(startupModule, iocManager);
+        //}
+        private void AddInterceptorRegistrars()
         {
-            return new VcBootstrapper(startupModule, iocManager);
+            //ValidationInterceptorRegistrar.Initialize(IocManager);
+            //AuditingInterceptorRegistrar.Initialize(IocManager);
+            //EntityHistoryInterceptorRegistrar.Initialize(IocManager);
+            //UnitOfWorkRegistrar.Initialize(IocManager);
+            //AuthorizationInterceptorRegistrar.Initialize(IocManager);
         }
-
         public virtual void Initialize()
         {
             ResolveLogger();

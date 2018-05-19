@@ -5,11 +5,14 @@ using System.Text;
 using Autofac;
 using JetBrains.Annotations;
 using VCore.Dependency.IocContainers;
+using VCore.Reflection;
 
 namespace VCore.Dependency
 {
     public class IocManager : IIocManager
     {
+        private readonly List<IConventionalDependencyRegistrar> _conventionalRegistrars;
+
         public static IocManager Instance { get; private set; }
 
         public IIocContainer IocContainer { get; private set; }
@@ -21,6 +24,7 @@ namespace VCore.Dependency
         public IocManager()
         {
             IocContainer = new IocContainer();
+            _conventionalRegistrars = new List<IConventionalDependencyRegistrar>();
 
             IocContainer.Register(builder =>
                     builder.RegisterInstance(this)
@@ -29,6 +33,39 @@ namespace VCore.Dependency
                         .As<IIocRegistrar>()
                         .As<IIocResolver>()
             );
+        }
+
+        public void AddConventionalRegistrar(IConventionalDependencyRegistrar registrar)
+        {
+            _conventionalRegistrars.Add(registrar);
+        }
+        public void RegisterAssemblyByConvention(Assembly assembly)
+        {
+            RegisterAssemblyByConvention(assembly, new ConventionalRegistrationConfig());
+        }
+
+        /// <summary>
+        /// Registers types of given assembly by all conventional registrars. See <see cref="AddConventionalRegistrar"/> method.
+        /// </summary>
+        /// <param name="assembly">Assembly to register</param>
+        /// <param name="config">Additional configuration</param>
+        public void RegisterAssemblyByConvention(Assembly assembly, ConventionalRegistrationConfig config)
+        {
+            var context = new ConventionalRegistrationContext(assembly, this, config);
+
+            foreach (var registerer in _conventionalRegistrars)
+            {
+                registerer.RegisterAssembly(context);
+            }
+            if (config.InstallInstallers && IsRegistered<ITypeFinder>())
+            {
+                var typeFinder = Resolve<ITypeFinder>();
+                var installers = typeFinder.FindClassesOfType<IIocInstaller>(assembly);
+                foreach (var installer in installers)
+                {
+                    IocContainer.Install((IIocInstaller)Activator.CreateInstance(installer));
+                }
+            }
         }
 
         public bool IsRegistered(Type type)
@@ -40,11 +77,7 @@ namespace VCore.Dependency
         {
             return IocContainer.IsRegistered<TType>();
         }
-
-        public void Register(Type type)
-        {
-            IocContainer.Register(type);
-        }
+       
         public void Register<TImpl>(DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton) where TImpl : class
         {
             IocContainer.Register(builder =>

@@ -12,14 +12,14 @@ namespace VCore.Dependency
         /// <param name="iocRegistrar">Registrar</param>
         /// <param name="type">Type of the class</param>
         /// <returns>True, if registered for given implementation.</returns>
-        public static bool RegisterIfNot(this IIocRegistrar iocRegistrar, Type type)
+        public static bool RegisterIfNot(this IIocRegistrar iocRegistrar, Type type, DependencyLifeStyle lifeStyle = DependencyLifeStyle.Singleton)
         {
             if (iocRegistrar.IsRegistered(type))
             {
                 return false;
             }
 
-            iocRegistrar.Register(type);
+            iocRegistrar.Register(type, lifeStyle);
             return true;
         }
     }

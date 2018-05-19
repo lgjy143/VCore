@@ -10,5 +10,6 @@ namespace VCore.Configuration.Startup
         string DefaultNameOrConnectionString { get; set; }
         IIocManager IocManager { get; }
         IModuleConfiguration Modules { get; }
+        void ReplaceService(Type type, Action replaceAction);
     }
 }
