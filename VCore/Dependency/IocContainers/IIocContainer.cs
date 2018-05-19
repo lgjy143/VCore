@@ -6,6 +6,7 @@ namespace VCore.Dependency.IocContainers
     public interface IIocContainer : IDisposable
     {
         IContainer Kernel { get; }
+        void Install(params IIocInstaller[] installers);
         /// <summary>
         /// Checks whether given type is registered before.
         /// </summary>

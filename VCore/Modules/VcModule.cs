@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using VCore.Configuration.Startup;
 using VCore.Dependency;
 using VCore.Extensions;
 
@@ -18,9 +19,9 @@ namespace VCore.Modules
         protected internal IIocManager IocManager { get; internal set; }
 
         /// <summary>
-        /// Gets a reference to the ABP configuration.
+        /// Gets a reference to the VCore configuration.
         /// </summary>
-        //protected internal IAbpStartupConfiguration Configuration { get; internal set; }
+        protected internal IVcStartupConfiguration Configuration { get; internal set; }
 
         /// <summary>
         /// Gets or sets the logger.

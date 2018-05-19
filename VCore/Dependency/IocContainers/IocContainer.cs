@@ -15,6 +15,14 @@ namespace VCore.Dependency.IocContainers
             Kernel = Builder.Build();
         }
 
+        public void Install(params IIocInstaller[] installers)
+        {
+            foreach (var installer in installers)
+            {
+                installer.Install(this);
+            }
+        }
+
         public void Dispose()
         {
             Kernel.Dispose();

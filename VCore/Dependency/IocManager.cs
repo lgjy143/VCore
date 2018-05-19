@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using Autofac;
+using JetBrains.Annotations;
 using VCore.Dependency.IocContainers;
 
 namespace VCore.Dependency
@@ -149,6 +150,12 @@ namespace VCore.Dependency
         public void Dispose()
         {
             IocContainer.Dispose();
+        }
+
+        internal void ReplaceInstance([NotNull] IocManager instance)
+        {
+            Check.NotNull(instance, nameof(instance));
+            Instance = instance;
         }
     }
 }

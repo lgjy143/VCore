@@ -4,37 +4,31 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using VCore.Configuration.Startup;
 using VCore.Dependency;
+using VCore.Extensions;
+using VCore.PlugIns;
 
 namespace VCore.Modules
 {
     public class VcModuleManager : IVcModuleManager
     {
-        public VcModuleInfo StartupModule { get; private set; }
+        private readonly IIocManager _iocManager;
 
-        public IReadOnlyList<VcModuleInfo> Modules => _modules.ToImmutableList();
-
+        private readonly IVcPlugInManager _vcPlugInManager;
         public ILogger Logger { get; set; }
 
-        private VcModuleCollection _modules;
-
-        private readonly IIocManager _iocManager;
-        public VcModuleManager(IIocManager iocManager)
+        public VcModuleManager(IIocManager iocManager, IVcPlugInManager vcPlugInManager)
         {
             _iocManager = iocManager;
+            _vcPlugInManager = vcPlugInManager;
+
             Logger = NullLogger.Instance;
         }
 
-        //private readonly IAbpPlugInManager _vcPlugInManager;
-
-        //public VcModuleManager(IIocManager iocManager, IVcPlugInManager vcPlugInManager)
-        //{
-        //    _iocManager = iocManager;
-        //    _vcPlugInManager = vcPlugInManager;
-
-        //    Logger = NullLogger.Instance;
-        //}
-
+        public VcModuleInfo StartupModule { get; private set; }
+        public IReadOnlyList<VcModuleInfo> Modules => _modules.ToImmutableList();
+        private VcModuleCollection _modules;
         public virtual void Initialize(Type startupModule)
         {
             _modules = new VcModuleCollection(startupModule);
@@ -86,13 +80,13 @@ namespace VCore.Modules
 
             var modules = VcModule.FindDependedModuleTypesRecursivelyIncludingGivenModule(_modules.StartupModuleType);
 
-            //foreach (var plugInModuleType in _vcPlugInManager.PlugInSources.GetAllModules())
-            //{
-            //    if (modules.AddIfNotContains(plugInModuleType))
-            //    {
-            //        plugInModuleTypes.Add(plugInModuleType);
-            //    }
-            //}
+            foreach (var plugInModuleType in _vcPlugInManager.PlugInSources.GetAllModules())
+            {
+                if (modules.AddIfNotContains(plugInModuleType))
+                {
+                    plugInModuleTypes.Add(plugInModuleType);
+                }
+            }
 
             return modules;
         }
@@ -108,7 +102,7 @@ namespace VCore.Modules
                 }
 
                 moduleObject.IocManager = _iocManager;
-                //moduleObject.Configuration = _iocManager.Resolve<IAbpStartupConfiguration>();
+                moduleObject.Configuration = _iocManager.Resolve<IVcStartupConfiguration>();
 
                 var moduleInfo = new VcModuleInfo(moduleType, moduleObject, plugInModuleTypes.Contains(moduleType));
 
