@@ -17,7 +17,7 @@ namespace VCore.Test.Dependency
         {
             LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof(EmptyImplTwo));
 
-            LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof(EmptyImplOne));
+            //LocalIocManager.Resolve<IEmpty>().GetType().ShouldBe(typeof(EmptyImplOne));
         }
 
         [Fact]
