@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VCore", "VCore\VCore.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{0A5E5C85-0339-4F6A-BA96-4AE95FCDB4A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCore.Test", "VCore.Test\VCore.Test.csproj", "{0407883A-6A89-48F3-AEF2-7FBE0D9E9ED3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VCore.Test", "VCore.Test\VCore.Test.csproj", "{0407883A-6A89-48F3-AEF2-7FBE0D9E9ED3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCore.Logging", "VCore.Logging\VCore.Logging.csproj", "{86960354-3BA9-4D38-9EA2-470513BAF567}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +25,10 @@ Global
 		{0407883A-6A89-48F3-AEF2-7FBE0D9E9ED3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0407883A-6A89-48F3-AEF2-7FBE0D9E9ED3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0407883A-6A89-48F3-AEF2-7FBE0D9E9ED3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86960354-3BA9-4D38-9EA2-470513BAF567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86960354-3BA9-4D38-9EA2-470513BAF567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86960354-3BA9-4D38-9EA2-470513BAF567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86960354-3BA9-4D38-9EA2-470513BAF567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,7 +1,4 @@
 ﻿using Autofac;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using VCore.Configuration.Startup;
 using VCore.Dependency;
 using VCore.Modules;

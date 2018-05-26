@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace VCore
 {
@@ -22,6 +23,11 @@ namespace VCore
         /// <param name="innerException">Inner exception</param>
         public VcException(string message, Exception innerException)
             : base(message, innerException)
+        {
+
+        }
+        public VcException(SerializationInfo serializationInfo, StreamingContext context)
+           : base(serializationInfo, context)
         {
 
         }
